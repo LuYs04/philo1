@@ -12,19 +12,20 @@
 
 #include "philo.h"
 
-int	is_dying(t_philo **ph)
+int	is_dying(t_philo *ph)
 {
 	int	tmp;
 
-	pthread_mutex_lock(&(*ph)->inf->time);
-	tmp = get_time_in_ms() - (*ph)->last_meal;
-	pthread_mutex_unlock(&(*ph)->inf->time);
-	if (tmp >= (*ph)->inf->die_time)
+	pthread_mutex_lock(&ph->inf->time);
+	tmp = get_time_in_ms() - ph->last_meal;
+	printf("%d, %lld, %d, |||| %d\n", ph->philo_id + 1, get_time_in_ms(), ph->last_meal, tmp);
+	pthread_mutex_unlock(&ph->inf->time);
+	if (tmp >= ph->inf->die_time)
 	{
-		pthread_mutex_lock(&(*ph)->inf->die);
-		(*ph)->inf->died = 1;
-		pthread_mutex_unlock(&(*ph)->inf->die);
-		print("died.\n", ph);
+		pthread_mutex_lock(&ph->inf->die);
+		ph->inf->died = 1;
+		pthread_mutex_unlock(&ph->inf->die);
+		print("died.\n", &ph);
 		return (1);
 	}
 	return (0);

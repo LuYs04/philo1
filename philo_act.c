@@ -28,11 +28,8 @@ void	philos_are_more_than_1(t_philo **ph, int i)
 	print("is eating\n", ph);
 	pthread_mutex_lock(&(*ph)->inf->time);
 	(*ph)->last_meal = get_time_in_ms();
-	// printf("last_meal of %d ====== %d\n", i, (*ph)->last_meal);
 	pthread_mutex_unlock(&(*ph)->inf->time);
-	pthread_mutex_lock(&(*ph)->inf->wait[i]);
-	my_usleep((*ph)->inf->eat_time);
-	pthread_mutex_unlock(&(*ph)->inf->wait[i]);
+	my_usleep((*ph)->inf->eat_time, ph);
 	pthread_mutex_lock(&(*ph)->inf->meals[i]);
 	((*ph)->meals_count)++;
 	pthread_mutex_unlock(&(*ph)->inf->meals[i]);
@@ -62,20 +59,23 @@ void	*philo_act(void *arg)
 	t_philo	*ph;
 
 	ph = (t_philo *)arg;
+	int	die_flag;
 	if (ph->philo_id % 2 != 0)
-	{
-		pthread_mutex_lock(&ph->inf->wait[ph->philo_id]);
-		my_usleep(ph->inf->eat_time);
-		pthread_mutex_unlock(&ph->inf->wait[ph->philo_id]);
-	}
-	while (!is_dying(&ph))
+		my_usleep(ph->inf->eat_time, &ph);
+	while (1)
 	{
 		eat(&ph);
 		print("is sleeping\n", &ph);
-		pthread_mutex_lock(&ph->inf->wait[ph->philo_id]);
-		my_usleep(ph->inf->sleep_time);
-		pthread_mutex_unlock(&ph->inf->wait[ph->philo_id]);
+		my_usleep(ph->inf->sleep_time, &ph);
 		print("is thinking\n", &ph);
+		// pthread_mutex_lock(&ph->inf->time);
+		// pthread_mutex_unlock(&ph->inf->time);
+		die_flag = is_dying(ph);
+		if (die_flag)
+			break ;
+		// pthread_mutex_unlock(&ph->inf->time);
+		// if (is_dying(&ph))
+		// 	break ;
 	}
 	return (0);
 }

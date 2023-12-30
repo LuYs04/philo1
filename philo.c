@@ -49,6 +49,7 @@ void	clear_data(t_data **data)
 	{
 		pthread_mutex_destroy(&(*data)->info->fork[i]);
 		pthread_mutex_destroy(&(*data)->info->meals[i]);
+		//pthread_thread_destroy()
 	}
 	pthread_mutex_destroy(&(*data)->info->print);
 	pthread_mutex_destroy(&(*data)->info->time);
@@ -80,6 +81,8 @@ int	main(int argc, char **argv)
 	{
 		if (init_args(argc, argv, &data))
 			return (1);
+		//printf("%d", data->info->nb_of_philos);
+		//exit(1);
 		if (init_data(&data))
 		{
 			clear_data(&data);

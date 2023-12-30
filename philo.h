@@ -34,7 +34,6 @@ typedef struct s_info
 	pthread_mutex_t	print;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	*meals;
-	pthread_mutex_t	*wait;
 }				t_info;
 
 typedef struct s_philo
@@ -52,13 +51,13 @@ typedef struct s_data
 	t_philo	*philos;
 }				t_data;
 
-long long	my_usleep(int time);
+long long	my_usleep(int time, t_philo **ph);
 int			check(t_data *data);
 int			ft_strlen(char *str);
 long long	get_time_in_ms(void);
 int			does_eat(t_philo *ph);
 void		*philo_act(void *arg);
-int			is_dying(t_philo **ph);
+int			is_dying(t_philo *ph);
 int			ft_atoi(const char *str);
 int			init_data(t_data **data);
 int			do_they_eat(t_data *data);

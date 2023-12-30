@@ -21,8 +21,6 @@ int	init_mutexes(t_data **dt)
 			* (*dt)->info->nb_of_philos);
 	(*dt)->info->meals = malloc(sizeof(pthread_mutex_t)
 			* (*dt)->info->nb_of_philos);
-	(*dt)->info->wait = malloc(sizeof(pthread_mutex_t)
-			* (*dt)->info->nb_of_philos);
 	if (!(*dt)->info->fork && !(*dt)->info->meals)
 		return (1);
 	if (pthread_mutex_init(&(*dt)->info->print, NULL)
@@ -32,8 +30,7 @@ int	init_mutexes(t_data **dt)
 	while (++i < (*dt)->info->nb_of_philos)
 	{
 		if (pthread_mutex_init(&(*dt)->info->fork[i], NULL)
-			||pthread_mutex_init(&(*dt)->info->meals[i], NULL)
-			|| pthread_mutex_init(&(*dt)->info->wait[i], NULL))
+			|| pthread_mutex_init(&(*dt)->info->meals[i], NULL))
 			return (1);
 	}
 	return (0);
@@ -105,6 +102,11 @@ int	join_threads(t_data **data)
 int	init_args(int argc, char **argv, t_data **data)
 {
 	(*data)->info = malloc(sizeof(t_info));
+	// if (!(*data)->info)
+	// {
+	// 	printf("ERROR: Malloc error!"); //stex
+	// 	return (1);
+	// }
 	(*data)->info->died = 0;
 	(*data)->info->nb_of_philos = ft_atoi(argv[1]);
 	(*data)->info->die_time = ft_atoi(argv[2]);
@@ -114,7 +116,7 @@ int	init_args(int argc, char **argv, t_data **data)
 		(*data)->info->nb_of_meals = ft_atoi(argv[5]);
 	else
 		(*data)->info->nb_of_meals = 0;
-	(*data)->philos = malloc(sizeof(t_philo) * (*data)->info->nb_of_philos);
+	(*data)->philos = malloc(sizeof(t_philo) * ((*data)->info->nb_of_philos + 1));
 	if (!(*data)->philos)
 	{
 		printf("ERROR: Malloc error!");

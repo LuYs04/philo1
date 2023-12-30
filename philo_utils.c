@@ -54,15 +54,20 @@ long long	get_time_in_ms(void)
 	return ((tv.tv_sec * 1000 + tv.tv_usec / 1000) - start);
 }
 
-long long	my_usleep(int time)
+long long	my_usleep(int time, t_philo **ph)
 {
 	int			i;
 	long long	a;
 
 	i = 0;
+	pthread_mutex_lock(&(*ph)->inf->time);
 	a = get_time_in_ms();
+	pthread_mutex_unlock(&(*ph)->inf->time);
+	// pthread_mutex_lock(&(*ph)->inf->time);
 	while (get_time_in_ms() - a < time)
 		;
+	// pthread_mutex_unlock(&(*ph)->inf->time);
+	
 	return (i);
 }
 
